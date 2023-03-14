@@ -12,6 +12,7 @@ const Posts = () => {
 
   const getPosts = async () => {
     setLoading(true);
+    console.log('RAN GET POST');
     const postsCollectionRef = collection(db, 'posts');
     const data = await getDocs(postsCollectionRef);
     console.log(data.docs);
