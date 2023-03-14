@@ -1,35 +1,8 @@
-import React, { useState } from 'react';
-import { db } from '../../firebase-config';
-import { collection, getDocs } from 'firebase/firestore';
+import React from 'react';
 import Post from '../Post/Post';
-import { useEffect } from 'react';
-import { Typography, Box, Grid } from '@mui/material';
-import Spinner from '../Spinner/Spinner';
+import { Grid } from '@mui/material';
 
-const Posts = () => {
-  const [loading, setLoading] = useState(true);
-  const [posts, setPosts] = useState([]);
-
-  const getPosts = async () => {
-    setLoading(true);
-    console.log('RAN GET POST');
-    const postsCollectionRef = collection(db, 'posts');
-    const data = await getDocs(postsCollectionRef);
-    console.log(data.docs);
-    setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    return () => {
-      getPosts();
-    };
-  }, []);
-
-  if (loading) {
-    return <Spinner />;
-  }
-
+const Posts = ({ posts }) => {
   return (
     <>
       <Grid container spacing={2}>

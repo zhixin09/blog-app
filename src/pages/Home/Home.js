@@ -1,22 +1,31 @@
 import React from 'react';
-import {
-  Typography,
-  AppBar,
-  Button,
-  CameraIcon,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Grid,
-  Container,
-  Box,
-  Stack,
-} from '@mui/material';
-import Post from '../../components/Post/Post';
+import { useState, useEffect } from 'react';
+import { Typography, Container } from '@mui/material';
+import { db } from '../../firebase-config';
+import { collection, getDocs } from 'firebase/firestore';
 import Posts from '../../components/Posts/Posts';
+import Spinner from '../../components/Spinner/Spinner';
 
 const Home = () => {
+  const [posts, setPosts] = useState();
+  const [loading, setLoading] = useState(true);
+
+  const getPosts = async () => {
+    setLoading(true);
+    console.log('RAN GET POST');
+    const postsCollectionRef = collection(db, 'posts');
+    const data = await getDocs(postsCollectionRef);
+    console.log(data.docs);
+    setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      getPosts();
+    };
+  }, []);
+
   return (
     <div>
       TEST
@@ -35,9 +44,7 @@ const Home = () => {
           five centuries, but also the leap into electronic typesetting,
           remaining essentially unchanged.
         </Typography>
-        <Container>
-          <Posts />
-        </Container>
+        <Container>{loading ? <Spinner /> : <Posts posts={posts} />}</Container>
       </Container>
     </div>
   );
