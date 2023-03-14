@@ -22,6 +22,7 @@ const Home = () => {
 
   useEffect(() => {
     return () => {
+      console.log('ON MOUNT RENDER');
       getPosts();
     };
   }, []);
