@@ -2,7 +2,7 @@ import React from 'react';
 import Post from '../Post/Post';
 import { Grid } from '@mui/material';
 
-const Posts = ({ posts }) => {
+const Posts = ({ posts, handleDelete }) => {
   return (
     <>
       <Grid container spacing={2}>
@@ -15,6 +15,7 @@ const Posts = ({ posts }) => {
               content={doc.content}
               date={doc.date}
               imageUrl={doc.imageUrl}
+              handleDelete={handleDelete}
             />
           </Grid>
         ))}

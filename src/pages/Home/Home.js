@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Typography, Container } from '@mui/material';
 import { db } from '../../firebase-config';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import Posts from '../../components/Posts/Posts';
 import Spinner from '../../components/Spinner/Spinner';
 
@@ -10,24 +10,38 @@ const Home = () => {
   const [posts, setPosts] = useState();
   const [loading, setLoading] = useState(true);
 
+  const postsCollectionRef = collection(db, 'posts');
+
   const getPosts = async () => {
-    setLoading(true);
-    console.log('RAN GET POST');
-    const postsCollectionRef = collection(db, 'posts');
-    const data = await getDocs(postsCollectionRef);
-    console.log(data.docs);
-    setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    setLoading(false);
+    try {
+      setLoading(true);
+      const data = await getDocs(postsCollectionRef);
+      console.log(data.docs);
+      setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      setLoading(true);
+      await deleteDoc(doc(db, 'posts', id));
+      const data = await getDocs(postsCollectionRef);
+      setPosts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    console.log('ON MOUNT RENDER');
     getPosts();
   }, []);
 
   return (
     <div>
-      TEST
       <Container
         maxWidth="lg"
         sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
@@ -43,7 +57,13 @@ const Home = () => {
           five centuries, but also the leap into electronic typesetting,
           remaining essentially unchanged.
         </Typography>
-        <Container>{loading ? <Spinner /> : <Posts posts={posts} />}</Container>
+        <Container>
+          {loading ? (
+            <Spinner />
+          ) : (
+            <Posts posts={posts} handleDelete={handleDelete} />
+          )}
+        </Container>
       </Container>
     </div>
   );
