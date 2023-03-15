@@ -10,6 +10,7 @@ const Posts = ({ posts, handleDelete }) => {
           <Grid item xs={4} key={doc.id}>
             <Post
               id={doc.id}
+              userID={doc.userID}
               title={doc.title}
               author={doc.author}
               content={doc.content}

@@ -12,6 +12,7 @@ import { db, storage } from '../../firebase-config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
+import { useParams } from 'react-router-dom';
 
 const AddEditBlog = () => {
   const { currentUser } = useAuth();
@@ -21,10 +22,14 @@ const AddEditBlog = () => {
   const [imgFile, setImgFile] = useState();
   const [progress, setProgress] = useState();
 
+  //URL has dynamic parameter
+  const { postID } = useParams();
+
   const docRef = collection(db, 'posts');
   const addPost = async () => {
     try {
       await addDoc(docRef, {
+        userID: currentUser.uid,
         title: titleRef.current.value,
         author: currentUser.displayName,
         content: contentRef.current.value,
@@ -54,10 +59,6 @@ const AddEditBlog = () => {
       console.log(titleRef.current.value);
     }
   };
-
-  // const handleChange = (e) => {
-  //   setImgFile();
-  // };
 
   useEffect(() => {
     const uploadFile = () => {
@@ -100,7 +101,7 @@ const AddEditBlog = () => {
       {!currentUser && <Typography>NO CURRENT USER</Typography>}
       <Container maxWidth="sm" sx={{ p: 2 }}>
         <Typography variant="h4" textAlign="center" py={2}>
-          Create Post
+          {postID ? 'Edit Post' : 'Create Post'}
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>

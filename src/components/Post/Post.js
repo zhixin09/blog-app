@@ -13,9 +13,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Post = (props) => {
-  const { id, title, author, content, date, imageUrl, handleDelete } = props;
+  const { currentUser } = useAuth();
+  const { id, userID, title, author, content, date, imageUrl, handleDelete } =
+    props;
 
   const formattedDate = new Date(date.seconds * 1000).toLocaleDateString();
   return (
@@ -63,18 +66,20 @@ const Post = (props) => {
           >
             read more
           </Button>
-          <div>
-            <IconButton
-              onClick={() => {
-                handleDelete(id);
-              }}
-            >
-              <DeleteIcon color="error" />
-            </IconButton>
-            <IconButton>
-              <EditIcon color="success" />
-            </IconButton>
-          </div>
+          {userID == currentUser.uid && (
+            <div>
+              <IconButton
+                onClick={() => {
+                  handleDelete(id);
+                }}
+              >
+                <DeleteIcon color="error" />
+              </IconButton>
+              <IconButton component={Link} to={`update/${id}`}>
+                <EditIcon color="success" />
+              </IconButton>
+            </div>
+          )}
         </CardActions>
       </Card>
     </div>
