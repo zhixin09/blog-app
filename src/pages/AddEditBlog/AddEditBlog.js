@@ -23,7 +23,7 @@ const AddEditBlog = () => {
   const [progress, setProgress] = useState();
 
   //URL has dynamic parameter
-  const { postID } = useParams();
+  const { id } = useParams();
 
   const docRef = collection(db, 'posts');
   const addPost = async () => {
@@ -101,7 +101,7 @@ const AddEditBlog = () => {
       {!currentUser && <Typography>NO CURRENT USER</Typography>}
       <Container maxWidth="sm" sx={{ p: 2 }}>
         <Typography variant="h4" textAlign="center" py={2}>
-          {postID ? 'Edit Post' : 'Create Post'}
+          {id ? 'Edit Post' : 'Create Post'}
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>

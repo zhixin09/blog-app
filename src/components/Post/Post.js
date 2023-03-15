@@ -66,7 +66,7 @@ const Post = (props) => {
           >
             read more
           </Button>
-          {userID == currentUser.uid && (
+          {currentUser && userID == currentUser.uid && (
             <div>
               <IconButton
                 onClick={() => {
