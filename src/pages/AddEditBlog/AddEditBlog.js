@@ -10,11 +10,19 @@ import {
 } from '@mui/material';
 import { db, storage } from '../../firebase-config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  getDoc,
+  serverTimestamp,
+  doc,
+  updateDoc,
+} from 'firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
 import { useParams } from 'react-router-dom';
 
 const AddEditBlog = () => {
+  const [post, setPost] = useState();
   const { currentUser } = useAuth();
   const titleRef = useRef();
   const contentRef = useRef();
@@ -25,10 +33,21 @@ const AddEditBlog = () => {
   //URL has dynamic parameter
   const { id } = useParams();
 
-  const docRef = collection(db, 'posts');
+  const collectionRef = collection(db, 'posts');
+
+  const getPost = async () => {
+    const docRef = doc(db, 'posts', id);
+    const data = await getDoc(docRef);
+    setPost(data.data());
+    try {
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const addPost = async () => {
     try {
-      await addDoc(docRef, {
+      await addDoc(collectionRef, {
         userID: currentUser.uid,
         title: titleRef.current.value,
         author: currentUser.displayName,
@@ -42,23 +61,50 @@ const AddEditBlog = () => {
     }
   };
 
+  const editPost = async (id) => {
+    try {
+      await updateDoc(doc(db, 'posts', id), {
+        userID: currentUser.uid,
+        title: titleRef.current.value,
+        author: currentUser.displayName,
+        content: contentRef.current.value,
+        date: serverTimestamp(),
+        imageUrl: imgUrl,
+      });
+      alert('Post Updated!');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!currentUser) {
-      alert('Please login before creating a post');
-    }
     if (
       titleRef.current.value &&
       contentRef.current.value &&
       imgUrl &&
       currentUser
     ) {
-      addPost();
+      if (id) {
+        //edit post
+        editPost(id);
+      } else {
+        //add post
+        addPost();
+      }
     } else {
       console.log('Missing input data!');
       console.log(titleRef.current.value);
     }
   };
+
+  const handleChange = (e) => {
+    setPost({ ...post, [e.target.name]: e.target.value });
+  };
+
+  useEffect(() => {
+    id && getPost();
+  }, [id]);
 
   useEffect(() => {
     const uploadFile = () => {
@@ -109,7 +155,11 @@ const AddEditBlog = () => {
               <TextField
                 inputRef={titleRef}
                 label="Title"
+                name="title"
                 fullWidth
+                value={post && post.title}
+                InputLabelProps={{ shrink: true }}
+                onChange={handleChange}
                 required
               ></TextField>
             </Grid>
@@ -117,10 +167,14 @@ const AddEditBlog = () => {
               <TextField
                 inputRef={contentRef}
                 label="Content"
+                name="content"
                 type="textarea"
                 fullWidth
                 multiline
                 rows={4}
+                value={post && post.content}
+                InputLabelProps={{ shrink: true }}
+                onChange={handleChange}
                 required
               ></TextField>
             </Grid>
@@ -148,7 +202,7 @@ const AddEditBlog = () => {
                 fullWidth
                 disabled={progress !== null && progress < 100}
               >
-                Add Post
+                {id ? 'Edit Post' : 'Add Post'}
               </Button>
             </Grid>
           </Grid>
