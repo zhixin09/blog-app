@@ -19,7 +19,7 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const AddEditBlog = () => {
   const [post, setPost] = useState();
@@ -29,6 +29,7 @@ const AddEditBlog = () => {
   const [imgUrl, setImgUrl] = useState();
   const [imgFile, setImgFile] = useState();
   const [progress, setProgress] = useState();
+  const navigate = useNavigate();
 
   //URL has dynamic parameter
   const { id } = useParams();
@@ -56,6 +57,7 @@ const AddEditBlog = () => {
         imageUrl: imgUrl,
       });
       alert('Post Added!');
+      navigate('/');
     } catch (error) {
       console.log(error);
     }
@@ -72,6 +74,7 @@ const AddEditBlog = () => {
         imageUrl: imgUrl,
       });
       alert('Post Updated!');
+      navigate('/');
     } catch (error) {
       console.log(error);
     }

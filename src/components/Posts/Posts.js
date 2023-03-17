@@ -7,7 +7,7 @@ const Posts = ({ posts, handleDelete }) => {
     <>
       <Grid container spacing={2}>
         {posts.map((doc) => (
-          <Grid item xs={4} key={doc.id}>
+          <Grid item xs={12} sm={6} md={4} key={doc.id}>
             <Post
               id={doc.id}
               userID={doc.userID}

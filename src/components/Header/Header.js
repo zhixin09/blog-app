@@ -6,8 +6,13 @@ import {
   Toolbar,
   Alert,
   Avatar,
+  MenuItem,
+  Menu,
+  Box,
+  IconButton,
 } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import MenuIcon from '@mui/icons-material/Menu';
 import { Container } from '@mui/system';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
@@ -18,18 +23,18 @@ const Header = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const navItems = [
+  const pages = [
     {
-      title: 'Home',
-      path: '/',
-    },
-    {
-      title: 'Add Post',
+      title: 'Create',
       path: '/create',
     },
     {
-      title: 'Projects',
-      path: '/projects',
+      title: 'About Me',
+      path: '/about',
+    },
+    {
+      title: 'Contact',
+      path: '/contact',
     },
   ];
   // const navigate = useNavigate();
@@ -48,83 +53,68 @@ const Header = () => {
     <>
       <AppBar position="relative">
         <Toolbar>
-          <Container
+          <IconButton size="large" edge="start">
+            <MenuIcon sx={{ color: 'white', mr: 2 }} />
+          </IconButton>
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
             sx={{
-              display: 'flex',
-              alignItems: 'center',
+              display: { xs: 'none', sm: 'block' },
+              textDecoration: 'none',
+              color: 'white',
+              mr: 4,
             }}
           >
-            <Container
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '33.33%',
-                gap: 20,
-              }}
-            >
-              <FacebookIcon fontSize="large" />
-              <Typography variant="h6">L O G O</Typography>
-            </Container>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                width: '33.33%',
-              }}
-            >
-              {navItems.map((item, index) => (
+            LIFE HACKER
+          </Typography>
+          <Box
+            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' }, gap: 1 }}
+          >
+            {pages.map((page) => (
+              <Button
+                key={page}
+                component={Link}
+                to={page.path}
+                sx={{ color: 'white' }}
+              >
+                {page.title}
+              </Button>
+            ))}
+          </Box>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {currentUser == null ? (
+              <Button component={Link} to="/login" variant="outlined">
+                Sign In
+              </Button>
+            ) : (
+              <>
+                <Avatar>
+                  {currentUser.displayName && currentUser.displayName.charAt(0)}
+                </Avatar>
+                <Typography variant="h6" mr={3}>
+                  {currentUser.displayName}
+                </Typography>
                 <Button
-                  key={index}
-                  component={Link}
-                  to={item.path}
-                  color="custom"
-                >
-                  <Typography variant="h6">{item.title}</Typography>
-                </Button>
-              ))}
-            </div>
-            <div
-              style={{
-                width: '33.33%',
-                display: 'flex',
-                justifyContent: 'flex-end',
-              }}
-            >
-              {currentUser == null ? (
-                <Button
-                  component={Link}
-                  to="/login"
+                  onClick={handleLogout}
                   variant="outlined"
                   color="custom"
                 >
-                  Sign In
+                  Log Out
                 </Button>
-              ) : (
-                <Container
-                  sx={{
-                    display: 'flex',
-                    gap: 2,
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <Avatar>
-                    {currentUser.displayName &&
-                      currentUser.displayName.charAt(0)}
-                  </Avatar>
-                  <Typography>{currentUser.displayName}</Typography>
-                  <Button
-                    onClick={handleLogout}
-                    variant="outlined"
-                    color="custom"
-                  >
-                    Log Out
-                  </Button>
-                </Container>
-              )}
-              {error && <Alert severity="error">{error}</Alert>}
-            </div>
-          </Container>
+              </>
+            )}
+          </Box>
+          {error && <Alert severity="error">{error}</Alert>}
+          {/* <Menu>
+              {pages.map((page) => (
+                <MenuItem key={page} component={Link} to={page.path}>
+                  <Typography variant="h6">{page.title}</Typography>
+                </MenuItem>
+              ))}
+            </Menu> */}
         </Toolbar>
       </AppBar>
     </>
