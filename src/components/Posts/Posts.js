@@ -2,12 +2,18 @@ import React from 'react';
 import Post from '../Post/Post';
 import { Grid } from '@mui/material';
 
-const Posts = ({ posts, handleDelete }) => {
+const Posts = ({ posts, handleDelete, otherPosts }) => {
   return (
     <>
       <Grid container spacing={2}>
         {posts.map((doc) => (
-          <Grid item xs={12} sm={6} md={4} key={doc.id}>
+          <Grid
+            item
+            xs={12}
+            sm={otherPosts ? 12 : 6}
+            md={otherPosts ? 12 : 4}
+            key={doc.id}
+          >
             <Post
               id={doc.id}
               userID={doc.userID}
@@ -17,16 +23,11 @@ const Posts = ({ posts, handleDelete }) => {
               date={doc.date}
               imageUrl={doc.imageUrl}
               handleDelete={handleDelete}
+              otherPosts={otherPosts}
             />
           </Grid>
         ))}
       </Grid>
-
-      {/* {!posts > 0 && (
-        <Typography variant="h4" sx={{ textAlign: 'center' }}>
-          No Post
-        </Typography>
-      )} */}
     </>
   );
 };

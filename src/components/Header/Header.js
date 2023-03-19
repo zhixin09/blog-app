@@ -6,14 +6,11 @@ import {
   Toolbar,
   Alert,
   Avatar,
-  MenuItem,
-  Menu,
   Box,
   IconButton,
 } from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
+
 import MenuIcon from '@mui/icons-material/Menu';
-import { Container } from '@mui/system';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -72,9 +69,9 @@ const Header = () => {
           <Box
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'flex' }, gap: 1 }}
           >
-            {pages.map((page) => (
+            {pages.map((page, id) => (
               <Button
-                key={page}
+                key={id}
                 component={Link}
                 to={page.path}
                 sx={{ color: 'white' }}
@@ -86,7 +83,12 @@ const Header = () => {
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             {currentUser == null ? (
-              <Button component={Link} to="/login" variant="outlined">
+              <Button
+                component={Link}
+                to="/login"
+                variant="outlined"
+                color="custom"
+              >
                 Sign In
               </Button>
             ) : (

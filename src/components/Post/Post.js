@@ -8,80 +8,99 @@ import {
   CardMedia,
   Typography,
   IconButton,
+  CardActionArea,
 } from '@mui/material';
 import React from 'react';
+import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { useAuth } from '../../contexts/AuthContext';
+import Excerpt from '../../utility/Excerpt';
 
 const Post = (props) => {
   const { currentUser } = useAuth();
-  const { id, userID, title, author, content, date, imageUrl, handleDelete } =
-    props;
+  const {
+    id,
+    userID,
+    title,
+    author,
+    content,
+    date,
+    imageUrl,
+    handleDelete,
+    otherPosts,
+  } = props;
 
   const formattedDate = new Date(date.seconds * 1000).toLocaleDateString();
   return (
     <div>
-      <Card>
-        <CardHeader
-          avatar={<Avatar>{author.charAt(0)}</Avatar>}
-          title={author}
-          subheader={formattedDate}
-        />
-        <CardMedia sx={{ height: 250 }} component="img" image={imageUrl} />
-        <CardContent>
-          <Typography
-            gutterBottom
-            variant="h5"
-            component="div"
-            sx={{
-              maxWidth: 500,
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-            }}
+      {!otherPosts ? (
+        <Card>
+          <CardHeader
+            avatar={<Avatar>{author.charAt(0)}</Avatar>}
+            title={author}
+            subheader={formattedDate}
+          />
+          <CardMedia sx={{ height: 250 }} component="img" image={imageUrl} />
+          <CardContent>
+            <Typography variant="h6">{Excerpt(title, 35)}</Typography>
+            <Typography variant="subtitle1">
+              <Moment format="MMM D, YYYY">{formattedDate}</Moment>
+            </Typography>
+            <Typography variant="subtitle1">{Excerpt(content, 80)}</Typography>
+          </CardContent>
+          <CardActions
+            sx={{ display: 'flex', justifyContent: 'space-between' }}
           >
-            {title}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{
-              maxWidth: 500,
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-            }}
-          >
-            {content}
-          </Typography>
-        </CardContent>
-        <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button
-            variant="contained"
-            size="small"
-            component={Link}
-            to={`/detail/${id}`}
-          >
-            read more
-          </Button>
-          {currentUser && userID == currentUser.uid && (
-            <div>
-              <IconButton
-                onClick={() => {
-                  handleDelete(id);
-                }}
-              >
-                <DeleteIcon color="error" />
-              </IconButton>
-              <IconButton component={Link} to={`update/${id}`}>
-                <EditIcon color="success" />
-              </IconButton>
-            </div>
-          )}
-        </CardActions>
-      </Card>
+            <Button
+              variant="contained"
+              component={Link}
+              to={`/detail/${id}`}
+              sx={{ mb: 1 }}
+            >
+              read more
+            </Button>
+
+            {currentUser && userID == currentUser.uid && (
+              <div>
+                <IconButton
+                  onClick={() => {
+                    handleDelete(id);
+                  }}
+                >
+                  <DeleteIcon color="error" />
+                </IconButton>
+                <IconButton component={Link} to={`update/${id}`}>
+                  <EditIcon color="success" />
+                </IconButton>
+              </div>
+            )}
+          </CardActions>
+        </Card>
+      ) : (
+        <CardActionArea component={Link} to={`/detail/${id}`}>
+          <Card sx={{ display: 'flex' }}>
+            <CardContent sx={{ flex: 1 }}>
+              <Typography variant="h6">{Excerpt(title, 22)}</Typography>
+              <Typography variant="subtitle1" color="textSecondary">
+                <Moment format="MMM D, YYYY">{formattedDate}</Moment>
+              </Typography>
+              <Typography variant="subtitle1" paragraph>
+                {Excerpt(content, 55)}
+              </Typography>
+            </CardContent>
+            <CardMedia
+              component="img"
+              sx={{
+                width: '30%',
+                display: { xs: 'none', sm: 'none', md: 'block' },
+              }}
+              image={imageUrl}
+            />
+          </Card>
+        </CardActionArea>
+      )}
     </div>
   );
 };

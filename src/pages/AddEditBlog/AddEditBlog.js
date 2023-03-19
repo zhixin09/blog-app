@@ -5,8 +5,8 @@ import {
   Grid,
   TextField,
   Typography,
-  FormLabel,
   LinearProgress,
+  Alert,
 } from '@mui/material';
 import { db, storage } from '../../firebase-config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -20,8 +20,10 @@ import {
 } from 'firebase/firestore';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 const AddEditBlog = () => {
+  const [alert, setAlert] = useState(false);
   const [post, setPost] = useState();
   const { currentUser } = useAuth();
   const titleRef = useRef();
@@ -56,7 +58,7 @@ const AddEditBlog = () => {
         date: serverTimestamp(),
         imageUrl: imgUrl,
       });
-      alert('Post Added!');
+      toast.success('Post Added!'), { position: 'top-center', autoClose: 5000 };
       navigate('/');
     } catch (error) {
       console.log(error);
@@ -73,7 +75,8 @@ const AddEditBlog = () => {
         date: serverTimestamp(),
         imageUrl: imgUrl,
       });
-      alert('Post Updated!');
+      toast.success('Post Updated!'),
+        { position: 'top-center', autoClose: 5000 };
       navigate('/');
     } catch (error) {
       console.log(error);
@@ -83,9 +86,9 @@ const AddEditBlog = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
-      titleRef.current.value &&
-      contentRef.current.value &&
-      imgUrl &&
+      // titleRef.current.value &&
+      // contentRef.current.value &&
+      // imgUrl &&
       currentUser
     ) {
       if (id) {
@@ -96,8 +99,10 @@ const AddEditBlog = () => {
         addPost();
       }
     } else {
-      console.log('Missing input data!');
-      console.log(titleRef.current.value);
+      setAlert(true);
+      setTimeout(() => {
+        setAlert(false);
+      }, 2000);
     }
   };
 
@@ -147,11 +152,16 @@ const AddEditBlog = () => {
 
   return (
     <>
-      {!currentUser && <Typography>NO CURRENT USER</Typography>}
+      <ToastContainer />
       <Container maxWidth="sm" sx={{ p: 2 }}>
-        <Typography variant="h4" textAlign="center" py={2}>
+        <Typography variant="h3" textAlign="center" gutterBottom>
           {id ? 'Edit Post' : 'Create Post'}
         </Typography>
+        {alert && (
+          <Alert severity="error" sx={{ my: 2 }}>
+            Please login to create post
+          </Alert>
+        )}
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -182,7 +192,9 @@ const AddEditBlog = () => {
               ></TextField>
             </Grid>
             <Grid item xs={12}>
-              <FormLabel>Upload an image</FormLabel>
+              <Typography gutterBottom fontWeight="light">
+                Upload an image*
+              </Typography>
               <TextField
                 type="file"
                 fullWidth
