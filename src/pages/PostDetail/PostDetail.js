@@ -2,9 +2,17 @@ import { doc, getDoc, getDocs, collection } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../firebase-config';
-import { Container, Typography, Box, Divider, Grid } from '@mui/material';
+import {
+  Container,
+  Typography,
+  Box,
+  Divider,
+  Grid,
+  Avatar,
+} from '@mui/material';
 import Spinner from '../../components/Spinner/Spinner';
 import Posts from '../../components/Posts/Posts';
+import Moment from 'react-moment';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -59,30 +67,45 @@ const PostDetail = () => {
           }}
         >
           <Box>
-            <Typography variant="h3" color="white">
+            <Typography variant="h4" fontWeight={600} color="white">
               {postDetail?.title}
             </Typography>
           </Box>
         </Box>
 
         <Grid container>
-          <Grid item md={8} xs={12} bgcolor="red">
+          <Grid item md={8} xs={12}>
             <Box mr={2}>
-              <Typography variant="body1" py={2}>
-                By {postDetail?.author} - {postDetail?.date}
-              </Typography>
-              <Divider />
+              <Box
+                sx={{ display: 'flex', gap: 2, alignItems: 'center', py: 2 }}
+              >
+                <Avatar>{postDetail?.author.charAt(0)}</Avatar>
+                <Box display="flex" flexDirection="column">
+                  <Typography variant="body1">{postDetail?.author}</Typography>
+                  <Typography variant="body2">
+                    <Moment format="MMM D, YYYY">{postDetail?.date}</Moment>
+                  </Typography>
+                </Box>
+              </Box>
+              <Divider sx={{ bgcolor: 'black' }} />
               <Typography variant="body2" py={2}>
                 {postDetail?.content}
               </Typography>
+
+              <Box py={2}>
+                <Typography variant="h6" py={2.75} fontWeight={600}>
+                  Comments
+                </Typography>
+                <Divider sx={{ bgcolor: 'black' }} />
+              </Box>
             </Box>
           </Grid>
 
           <Grid item md={4} xs={12}>
-            <Typography variant="body1" py={2}>
+            <Typography variant="h6" py={2.75} fontWeight={600}>
               Other Posts
             </Typography>
-            <Divider />
+            <Divider sx={{ bgcolor: 'black' }} />
             <Box py={2}>
               {loading ? (
                 <Spinner />
@@ -90,25 +113,6 @@ const PostDetail = () => {
                 <Posts posts={posts} otherPosts={true} />
               )}
             </Box>
-          </Grid>
-
-          <Grid item md={8} xs={12} bgcolor="green">
-            test
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={2}>
-          <Grid item xs={6} md={8}>
-            xs=6 md=8
-          </Grid>
-          <Grid item xs={6} md={4}>
-            xs=6 md=8
-          </Grid>
-          <Grid item xs={6} md={4}>
-            xs=6 md=8
-          </Grid>
-          <Grid item xs={6} md={8}>
-            xs=6 md=8
           </Grid>
         </Grid>
       </Container>

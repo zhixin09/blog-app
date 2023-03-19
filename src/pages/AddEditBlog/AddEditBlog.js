@@ -154,7 +154,12 @@ const AddEditBlog = () => {
     <>
       <ToastContainer />
       <Container maxWidth="sm" sx={{ p: 2 }}>
-        <Typography variant="h3" textAlign="center" gutterBottom>
+        <Typography
+          variant="h3"
+          textAlign="center"
+          fontWeight={600}
+          gutterBottom
+        >
           {id ? 'Edit Post' : 'Create Post'}
         </Typography>
         {alert && (

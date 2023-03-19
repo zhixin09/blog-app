@@ -8,6 +8,9 @@ import {
   Avatar,
   Box,
   IconButton,
+  Tooltip,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -26,7 +29,7 @@ const Header = () => {
       path: '/create',
     },
     {
-      title: 'About Me',
+      title: 'About',
       path: '/about',
     },
     {
@@ -62,6 +65,7 @@ const Header = () => {
               textDecoration: 'none',
               color: 'white',
               mr: 4,
+              fontWeight: 700,
             }}
           >
             LIFE HACKER
@@ -74,7 +78,7 @@ const Header = () => {
                 key={id}
                 component={Link}
                 to={page.path}
-                sx={{ color: 'white' }}
+                sx={{ color: 'white', fontWeight: 600 }}
               >
                 {page.title}
               </Button>
@@ -93,12 +97,52 @@ const Header = () => {
               </Button>
             ) : (
               <>
-                <Avatar>
-                  {currentUser.displayName && currentUser.displayName.charAt(0)}
-                </Avatar>
-                <Typography variant="h6" mr={3}>
-                  {currentUser.displayName}
-                </Typography>
+                <Tooltip
+                  title={
+                    <>
+                      <Typography variant="body1" mr={3}>
+                        {currentUser.displayName}
+                      </Typography>
+                      <Typography variant="body2" mr={3}>
+                        {currentUser.email}
+                      </Typography>
+                    </>
+                  }
+                >
+                  <IconButton>
+                    <Avatar>
+                      {currentUser.displayName &&
+                        currentUser.displayName.charAt(0)}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  sx={{ mt: '45px' }}
+                  id="menu-appbar"
+                  // anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={false}
+                  // onClose={handleCloseUserMenu}
+                >
+                  <MenuItem>
+                    <Typography textAlign="center">Account</Typography>
+                  </MenuItem>
+                  <MenuItem>
+                    <Typography textAlign="center">Settings</Typography>
+                  </MenuItem>
+                  <MenuItem>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Menu>
+
                 <Button
                   onClick={handleLogout}
                   variant="outlined"

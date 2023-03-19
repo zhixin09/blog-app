@@ -33,6 +33,7 @@ const Post = (props) => {
   } = props;
 
   const formattedDate = new Date(date.seconds * 1000).toLocaleDateString();
+
   return (
     <div>
       {!otherPosts ? (
@@ -44,11 +45,13 @@ const Post = (props) => {
           />
           <CardMedia sx={{ height: 250 }} component="img" image={imageUrl} />
           <CardContent>
-            <Typography variant="h6">{Excerpt(title, 35)}</Typography>
+            <Typography variant="h6" fontWeight={600}>
+              {Excerpt(title, 28)}
+            </Typography>
             <Typography variant="subtitle1">
               <Moment format="MMM D, YYYY">{formattedDate}</Moment>
             </Typography>
-            <Typography variant="subtitle1">{Excerpt(content, 80)}</Typography>
+            <Typography variant="subtitle1">{Excerpt(content, 75)}</Typography>
           </CardContent>
           <CardActions
             sx={{ display: 'flex', justifyContent: 'space-between' }}
@@ -80,14 +83,16 @@ const Post = (props) => {
         </Card>
       ) : (
         <CardActionArea component={Link} to={`/detail/${id}`}>
-          <Card sx={{ display: 'flex' }}>
+          <Card sx={{ display: 'flex', height: 150 }}>
             <CardContent sx={{ flex: 1 }}>
-              <Typography variant="h6">{Excerpt(title, 22)}</Typography>
-              <Typography variant="subtitle1" color="textSecondary">
+              <Typography variant="h6" fontWeight={600}>
+                {Excerpt(title, 19)}
+              </Typography>
+              <Typography variant="body1" color="textSecondary">
                 <Moment format="MMM D, YYYY">{formattedDate}</Moment>
               </Typography>
-              <Typography variant="subtitle1" paragraph>
-                {Excerpt(content, 55)}
+              <Typography variant="body2" paragraph>
+                {Excerpt(content, 60)}
               </Typography>
             </CardContent>
             <CardMedia
