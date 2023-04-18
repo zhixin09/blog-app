@@ -45,7 +45,7 @@ const LeaveComment = ({ addComment }) => {
   return (
     <>
       <ListItemAvatar>
-        <Avatar>{currentUser.displayName.charAt(0)}</Avatar>
+        <Avatar>{currentUser?.displayName.charAt(0)}</Avatar>
       </ListItemAvatar>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
         <TextField
