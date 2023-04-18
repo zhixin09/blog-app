@@ -1,4 +1,4 @@
-import { doc, getDoc, getDocs, collection } from 'firebase/firestore';
+import { doc, getDoc, getDocs, collection, addDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { db } from '../../firebase-config';
@@ -13,14 +13,17 @@ import {
 import Spinner from '../../components/Spinner/Spinner';
 import Posts from '../../components/Posts/Posts';
 import Moment from 'react-moment';
+import Comments from '../../components/Comments/Comments';
 
 const PostDetail = () => {
   const { id } = useParams();
   const [postDetail, setPostDetail] = useState();
   const [posts, setPosts] = useState();
+  const [comments, setComments] = useState();
   const [loading, setLoading] = useState(true);
 
   const postsCollectionRef = collection(db, 'posts');
+  const commentsCollectionRef = collection(db, 'comments');
 
   const getPostDetail = async () => {
     const postDocRef = doc(db, 'posts', id);
@@ -36,7 +39,6 @@ const PostDetail = () => {
     try {
       setLoading(true);
       const data = await getDocs(postsCollectionRef);
-      console.log(data.docs);
       setPosts(
         data.docs
           .map((doc) => ({ ...doc.data(), id: doc.id }))
@@ -48,8 +50,35 @@ const PostDetail = () => {
     }
   };
 
+  const getComments = async () => {
+    try {
+      const data = await getDocs(commentsCollectionRef);
+      setComments(
+        data.docs
+          .map((doc) => ({ ...doc.data(), id: doc.id }))
+          .filter((comment) => comment.postID === id)
+          .sort((a, b) => b.date.seconds - a.date.seconds)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addComment = async (comment) => {
+    try {
+      await addDoc(commentsCollectionRef, comment);
+      getComments();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    id && getPostDetail() && getOtherPosts();
+    if (id) {
+      getPostDetail();
+      getOtherPosts();
+      getComments();
+    }
   }, [id]);
   return (
     <>
@@ -97,6 +126,11 @@ const PostDetail = () => {
                   Comments
                 </Typography>
                 <Divider sx={{ bgcolor: 'black' }} />
+                {comments ? (
+                  <Comments comments={comments} addComment={addComment} />
+                ) : (
+                  'No comments'
+                )}
               </Box>
             </Box>
           </Grid>
