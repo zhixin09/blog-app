@@ -34,7 +34,7 @@ git clone https://github.com/your-username/my-blog-app.git
 ```
 cd my-blog-app
 ```
-3. Install the dependencies:
+3. Install the dependencies for both front & back end:
 ```
 cd blog-app/client
 npm install
@@ -45,18 +45,17 @@ npm install
 ```
 4. Set up the database connection:
 
-Ensure MongoDB is running on your local machine.
-Update the MongoDB connection URL in the config.js file.
+- Ensure MongoDB is running on your local machine.
+- Update the MongoDB connection URL in the config.js file.
 ```
 PORT = 5001
 CONNECTION_STRING = Your Connection String
 ```
-5. Start the development server:
+5. Start the development server for the backend:
 ```
-cd blog-app/server
 npm devStart
 ```
-6. Start the client:
+6. Start the development server for the frontend:
 ```
 cd blog-app/client
 npm Start
