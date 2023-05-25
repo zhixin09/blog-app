@@ -1,15 +1,23 @@
 # LIVE DEMO
-https://lifehacker.netlify.app/
+[deployed website](https://lifehacker.netlify.app/)
 
 # TECH STACK
 
-Frontend: React
+- Frontend: React
+- Backend: NodeJS & ExpressJS
+- Database: MongoDB
+- Server: Node
 
-Backend: NodeJS & ExpressJS
+**text**
+*text*
 
-Database: MongoDB
+1. Item 1
+2. Item 2
 
-Server: Node
+| Column 1 | Column 2 |
+| -------- | -------- |
+| Item 1   | Item 2   |
+
 
 # Getting Started with Create React App
 
