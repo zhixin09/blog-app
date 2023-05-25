@@ -1,12 +1,23 @@
-# LIVE DEMO
-[deployed website](https://lifehacker.netlify.app/)
+# Project Overview
+Blog App is an React Based Web platform that allows user to share, create and manage their own posts.
 
-# TECH STACK
+## Live Demo
+https://lifehacker.netlify.app/
+
+## Tech Stack
 
 - Frontend: React
 - Backend: NodeJS & ExpressJS
 - Database: MongoDB
 - Server: Node
+
+## Prerequisites
+
+Before running this project, make sure you have the following software installed in your environment:
+
+- [MongoDB](https://www.mongodb.com) - Version X.X.X
+- [Node.js](https://nodejs.org) - Version X.X.X
+
 
 **text**
 *text*
